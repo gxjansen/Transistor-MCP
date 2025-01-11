@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import {
+  AuthorizeUploadArgs,
   CreateEpisodeArgs,
   GetAnalyticsArgs,
   GetEpisodeArgs,
@@ -23,6 +24,18 @@ export class TransistorApiClient {
         Accept: "application/json",
       },
     });
+  }
+
+  async getAuthenticatedUser() {
+    const response = await this.api.get("/v1");
+    return response.data;
+  }
+
+  async authorizeUpload(args: AuthorizeUploadArgs) {
+    const response = await this.api.get("/v1/episodes/authorize_upload", {
+      params: { filename: args.filename },
+    });
+    return response.data;
   }
 
   async listShows(args: ListShowsArgs) {

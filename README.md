@@ -22,6 +22,30 @@ Add the server to your MCP settings configuration file with your Transistor API 
 
 ## Available Tools
 
+### get_authenticated_user
+Get details of the authenticated user account.
+
+```json
+{
+  // No parameters needed
+}
+```
+
+### authorize_upload
+Get a pre-signed URL for uploading an audio file. Use this before creating an episode with a local audio file.
+
+```json
+{
+  "filename": string  // Required: Name of the audio file to upload
+}
+```
+
+Response includes:
+- upload_url: Pre-signed S3 URL for uploading the file
+- content_type: Content type to use when uploading (e.g., "audio/mpeg")
+- expires_in: Time in seconds until the upload URL expires
+- audio_url: Final URL to use when creating the episode
+
 ### list_shows
 List all shows in your Transistor.fm account, ordered by updated date (newest first). Returns a paginated list with 10 items per page.
 
@@ -329,3 +353,50 @@ The server has been thoroughly tested with the following improvements:
 - Corrected analytics endpoint URL from `/v1/analytics/shows/{id}` to `/v1/analytics/{id}`
 - Verified proper handling of sparse fieldsets and included resources
 - Confirmed working analytics for both shows and individual episodes
+
+## Not Yet Implemented
+
+The following Transistor API features are not yet implemented:
+- Private Episodes functionality (subscribers management)
+  - GET /v1/subscribers
+  - GET /v1/subscribers/:id
+  - POST /v1/subscribers
+  - POST /v1/subscribers/batch
+  - PATCH /v1/subscribers/:id
+  - DELETE /v1/subscribers
+  - DELETE /v1/subscribers/:id
+
+## Example Usage (continued)
+
+Get authenticated user:
+```typescript
+const result = await use_mcp_tool({
+  server_name: "transistor",
+  tool_name: "get_authenticated_user",
+  arguments: {}
+});
+```
+
+Authorize audio file upload:
+```typescript
+// First, get a pre-signed upload URL
+const auth = await use_mcp_tool({
+  server_name: "transistor",
+  tool_name: "authorize_upload",
+  arguments: {
+    filename: "my-episode.mp3"
+  }
+});
+
+// Then use the returned upload_url to upload your file via PUT request
+// Finally, use the returned audio_url when creating your episode:
+const episode = await use_mcp_tool({
+  server_name: "transistor",
+  tool_name: "create_episode",
+  arguments: {
+    show_id: "123456",
+    title: "My New Episode",
+    audio_url: auth.data.attributes.audio_url
+  }
+});
+```

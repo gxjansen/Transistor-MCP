@@ -1,3 +1,11 @@
+export interface GetAuthenticatedUserArgs {
+  // No arguments needed for this endpoint
+}
+
+export interface AuthorizeUploadArgs {
+  filename: string;  // Required: Filename of the audio file to upload
+}
+
 export interface ListShowsArgs {
   page?: number;
 }
@@ -169,6 +177,17 @@ export function isUnsubscribeWebhookArgs(args: unknown): args is UnsubscribeWebh
   if (!args || typeof args !== "object") return false;
   const { webhook_id } = args as UnsubscribeWebhookArgs;
   return typeof webhook_id === "string";
+}
+
+export function isGetAuthenticatedUserArgs(args: unknown): args is GetAuthenticatedUserArgs {
+  // No arguments to validate
+  return true;
+}
+
+export function isAuthorizeUploadArgs(args: unknown): args is AuthorizeUploadArgs {
+  if (!args || typeof args !== "object") return false;
+  const { filename } = args as AuthorizeUploadArgs;
+  return typeof filename === "string";
 }
 
 export function isGetEpisodeArgs(args: unknown): args is GetEpisodeArgs {

@@ -11,6 +11,9 @@ import {
   isListWebhooksArgs,
   isSubscribeWebhookArgs,
   isUnsubscribeWebhookArgs,
+  isGetAuthenticatedUserArgs,
+  isAuthorizeUploadArgs,
+  AuthorizeUploadArgs,
 } from "./types.js";
 import axios from "axios";
 
@@ -19,6 +22,28 @@ export class ToolHandlers {
 
   getToolDefinitions() {
     return [
+      {
+        name: "get_authenticated_user",
+        description: "Get details of the authenticated user account",
+        inputSchema: {
+          type: "object",
+          properties: {},  // No parameters needed
+        },
+      },
+      {
+        name: "authorize_upload",
+        description: "Get a pre-signed URL for uploading an audio file",
+        inputSchema: {
+          type: "object",
+          properties: {
+            filename: {
+              type: "string",
+              description: "Filename of the audio file to upload",
+            },
+          },
+          required: ["filename"],
+        },
+      },
       {
         name: "list_shows",
         description: "List all shows in your Transistor.fm account",
@@ -268,6 +293,32 @@ export class ToolHandlers {
   async handleToolCall(name: string, args: unknown) {
     try {
       switch (name) {
+        case "get_authenticated_user": {
+          if (!isGetAuthenticatedUserArgs(args)) {
+            throw new McpError(
+              ErrorCode.InvalidParams,
+              "Invalid arguments for get_authenticated_user"
+            );
+          }
+          const data = await this.apiClient.getAuthenticatedUser();
+          return {
+            content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
+          };
+        }
+
+        case "authorize_upload": {
+          if (!isAuthorizeUploadArgs(args)) {
+            throw new McpError(
+              ErrorCode.InvalidParams,
+              "Invalid arguments for authorize_upload"
+            );
+          }
+          const data = await this.apiClient.authorizeUpload(args);
+          return {
+            content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
+          };
+        }
+
         case "list_shows": {
           if (!isListShowsArgs(args)) {
             throw new McpError(
