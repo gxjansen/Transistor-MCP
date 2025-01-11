@@ -1,0 +1,26 @@
+{
+  "name": "transistor-server",
+  "version": "0.1.0",
+  "description": "Transistor.fm API integration",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "transistor-server": "./build/index.js"
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "node --max-old-space-size=4096 ./node_modules/.bin/tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+    "prepare": "npm run build",
+    "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "0.6.0",
+    "axios": "^1.7.9"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "typescript": "^5.3.3"
+  }
+}
