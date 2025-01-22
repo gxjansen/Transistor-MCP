@@ -191,7 +191,7 @@ Unsubscribe from a webhook.
 
 ## Important Notes
 
-- API requests are rate-limited to 10 requests per 10 seconds
+- API requests are rate-limited to 10 requests per 10 seconds (as prescribed by the (https://developers.transistor.fm/#:~:text=API%20requests%20are%20rate%2Dlimited,to%20use%20the%20API%20again.)[Transistor API reference])
 - Dates must be in "dd-mm-yyyy" format
 - Page numbers start at 0
 - All endpoints support:
@@ -347,28 +347,6 @@ const unsubscribe = await use_mcp_tool({
 });
 ```
 
-## Development Notes
-
-The server has been thoroughly tested with the following improvements:
-- Fixed pagination format to use `pagination[page]` instead of `page` for proper JSONAPI compliance
-- Corrected analytics endpoint URL from `/v1/analytics/shows/{id}` to `/v1/analytics/{id}`
-- Verified proper handling of sparse fieldsets and included resources
-- Confirmed working analytics for both shows and individual episodes
-
-## Not Yet Implemented
-
-The following Transistor API features are not yet implemented:
-- Private Episodes functionality (subscribers management)
-  - GET /v1/subscribers
-  - GET /v1/subscribers/:id
-  - POST /v1/subscribers
-  - POST /v1/subscribers/batch
-  - PATCH /v1/subscribers/:id
-  - DELETE /v1/subscribers
-  - DELETE /v1/subscribers/:id
-
-## Example Usage (continued)
-
 Get authenticated user:
 ```typescript
 const result = await use_mcp_tool({
@@ -402,3 +380,14 @@ const episode = await use_mcp_tool({
 });
 ```
 
+## Not Yet Implemented
+
+The following Transistor API features are not yet implemented:
+- Private Episodes functionality (subscribers management)
+  - GET /v1/subscribers
+  - GET /v1/subscribers/:id
+  - POST /v1/subscribers
+  - POST /v1/subscribers/batch
+  - PATCH /v1/subscribers/:id
+  - DELETE /v1/subscribers
+  - DELETE /v1/subscribers/:id
