@@ -1,7 +1,7 @@
 # Transistor MCP Server
 [![smithery badge](https://smithery.ai/badge/@gxjansen/Transistor-MCP)](https://smithery.ai/server/@gxjansen/Transistor-MCP)
 
-This MCP server provides tools to interact with the Transistor.fm API, allowing you to manage podcasts, episodes, and view analytics.
+This MCP server provides tools to interact with the [Transistor.fm](https://transistor.fm/) API, allowing you to manage podcasts, episodes, and view analytics.
 
 ## Configuration
 
