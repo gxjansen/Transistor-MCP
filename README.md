@@ -189,10 +189,107 @@ Unsubscribe from a webhook.
 }
 ```
 
+### get_show
+Get a show by ID.
+```json
+show_id: string   // Required
+```
+
+### update_show
+Update a show.
+```json
+show_id: string   // Required
+author: string   // Optional
+category: string   // Optional
+copyright: string   // Optional
+description: string   // Optional
+explicit: boolean   // Optional
+image_url: string   // Optional
+keywords: string   // Optional
+language: string   // Optional
+owner_email: string   // Optional
+secondary_category: string   // Optional
+show_type: "episodic" | "serial"   // Optional
+title: string   // Optional
+time_zone: string   // Optional
+website: string   // Optional
+```
+
+### publish_episode
+Publish or schedule an episode without otherwise editing its metadata.
+```json
+episode_id: string   // Required
+status: "published" | "scheduled" | "draft"   // Required
+published_at: string   // Optional
+```
+
+### get_download_summary
+Get a computed download summary for a show or episode. Returns total downloads, daily average, week-over-week trend, and best/worst day.
+```json
+show_id: string   // Required
+episode_id: string   // Optional
+start_date: string   // Optional
+end_date: string   // Optional
+```
+
+### compare_episodes
+Compare download performance across multiple episodes, sorted by total downloads.
+```json
+episode_ids: string[]   // Required - array of episode IDs
+start_date: string   // Optional
+end_date: string   // Optional
+```
+
+### list_subscribers
+List subscribers for a show.
+```json
+show_id: string   // Required
+page: number   // Optional
+per: number   // Optional
+query: string   // Optional
+```
+
+### get_subscriber
+Get a subscriber by ID.
+```json
+subscriber_id: string   // Required
+```
+
+### create_subscriber
+Create a subscriber.
+```json
+show_id: string   // Required
+email: string   // Required
+skip_welcome_email: boolean   // Optional
+```
+
+### create_subscribers_batch
+Create multiple subscribers in a single request.
+```json
+show_id: string   // Required
+emails: string[]   // Required
+skip_welcome_email: boolean   // Optional
+```
+
+### update_subscriber
+Update a subscriber's email.
+```json
+subscriber_id: string   // Required
+email: string   // Required
+```
+
+### delete_subscriber
+Delete a subscriber. Provide either `subscriber_id`, OR both `show_id` and `email`.
+```json
+subscriber_id: string   // Optional - either this, or both show_id + email
+show_id: string   // Optional - required with email when no subscriber_id
+email: string   // Optional - required with show_id when no subscriber_id
+```
+
 ## Important Notes
 
 - API requests are rate-limited to 10 requests per 10 seconds (as prescribed by the (https://developers.transistor.fm/#:~:text=API%20requests%20are%20rate%2Dlimited,to%20use%20the%20API%20again.)[Transistor API reference])
-- Dates must be in "dd-mm-yyyy" format
+- Dates accept ISO `yyyy-mm-dd` (recommended) and are converted to the Transistor API's `dd-mm-yyyy` automatically; `dd-mm-yyyy` is also accepted
 - Page numbers start at 0
 - All endpoints support:
   - Sparse fieldsets: Specify which fields to return using `fields[resource_type][]`
@@ -380,14 +477,8 @@ const episode = await use_mcp_tool({
 });
 ```
 
-## Not Yet Implemented
+## Coverage
 
-The following Transistor API features are not yet implemented:
-- Private Episodes functionality (subscribers management)
-  - GET /v1/subscribers
-  - GET /v1/subscribers/:id
-  - POST /v1/subscribers
-  - POST /v1/subscribers/batch
-  - PATCH /v1/subscribers/:id
-  - DELETE /v1/subscribers
-  - DELETE /v1/subscribers/:id
+This server now covers the full documented Transistor API surface, including shows,
+episodes, analytics, download summaries, webhooks, and private-podcast subscriber
+management (`GET/POST/PATCH/DELETE /v1/subscribers`).

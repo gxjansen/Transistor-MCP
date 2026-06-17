@@ -8,9 +8,14 @@ import {
 import { TransistorApiClient } from "./api-client.js";
 import { ToolHandlers } from "./tool-handlers.js";
 
-const API_KEY = process.env.TRANSISTOR_API_KEY;
+const API_KEY = process.env.TRANSISTOR_API_KEY ?? "";
 if (!API_KEY) {
-  throw new Error("TRANSISTOR_API_KEY environment variable is required");
+  console.error(
+    "Warning: TRANSISTOR_API_KEY is not set. The server will start, but tool calls will fail until it is configured."
+  );
+  console.error(
+    "Get your API key at https://dashboard.transistor.fm/account. See README.md."
+  );
 }
 
 class TransistorServer {
@@ -30,8 +35,8 @@ class TransistorServer {
       }
     );
 
-    const apiClient = new TransistorApiClient(API_KEY as string);
-    this.toolHandlers = new ToolHandlers(apiClient);
+    const apiClient = new TransistorApiClient(API_KEY);
+    this.toolHandlers = new ToolHandlers(apiClient, Boolean(API_KEY));
 
     this.setupToolHandlers();
 

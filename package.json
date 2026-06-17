@@ -1,9 +1,33 @@
 {
   "name": "transistor-server",
-  "version": "0.1.0",
-  "description": "Transistor.fm API integration",
+  "version": "0.2.0",
+  "description": "MCP server for the Transistor.fm podcast hosting API — manage shows, episodes, analytics, download summaries, transcripts, subscribers, and webhooks.",
   "private": true,
   "type": "module",
+  "author": "Guido X Jansen (https://github.com/gxjansen)",
+  "contributors": [
+    "Conor Bronsdon (https://conorbronsdon.com)"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gxjansen/Transistor-MCP.git"
+  },
+  "homepage": "https://github.com/gxjansen/Transistor-MCP#readme",
+  "bugs": {
+    "url": "https://github.com/gxjansen/Transistor-MCP/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "transistor",
+    "transistor-fm",
+    "podcast",
+    "podcast-hosting",
+    "analytics",
+    "claude",
+    "ai-agents"
+  ],
   "bin": {
     "transistor-server": "./build/index.js"
   },
@@ -13,6 +37,7 @@
   "scripts": {
     "build": "node --max-old-space-size=4096 ./node_modules/.bin/tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
     "prepare": "npm run build",
+    "lint": "tsc --noEmit",
     "watch": "tsc --watch"
   },
   "dependencies": {
@@ -22,5 +47,8 @@
   "devDependencies": {
     "@types/node": "^20.11.24",
     "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
