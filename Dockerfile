@@ -1,34 +1,24 @@
-# Use an official Node.js image as the base image
-FROM node:20 AS builder
+# transistor-mcp — stdio MCP server for the Transistor.fm podcast hosting API
+# Build:  docker build -t transistor-mcp .
+# Run:    docker run -i --rm -e TRANSISTOR_API_KEY=... transistor-mcp
 
-# Set the working directory
+FROM node:22-alpine AS builder
 WORKDIR /app
+COPY package.json package-lock.json tsconfig.json ./
+COPY src ./src
+RUN npm ci --ignore-scripts && npm run build
 
-# Copy the package.json and package-lock.json to the working directory
+FROM node:22-alpine
+WORKDIR /app
+ENV NODE_ENV=production
 COPY package.json package-lock.json ./
-
-# Install the dependencies
-RUN npm install
-
-# Copy the rest of the application files to the working directory
-COPY . .
-
-# Build the TypeScript code
-RUN npm run build
-
-# Use a smaller Node.js image for the production environment
-FROM node:20-slim AS production
-
-# Set the working directory
-WORKDIR /app
-
-# Copy the built files and necessary files from the builder stage
+RUN npm ci --omit=dev --ignore-scripts
 COPY --from=builder /app/build ./build
-COPY --from=builder /app/node_modules ./node_modules
-COPY package.json ./
 
-# Set environment variables (if needed)
-ENV TRANSISTOR_API_KEY=your-api-key-here
+# Runtime environment variables (optional at startup — the server starts and
+# answers introspection without them; tool calls fail with a clear error
+# until it is set):
+#   TRANSISTOR_API_KEY — API key from https://dashboard.transistor.fm/account
 
-# Command to run the application
-ENTRYPOINT ["node", "build/index.js"]
+USER node
+CMD ["node", "build/index.js"]
