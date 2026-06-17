@@ -41,7 +41,7 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.25.2",
+    "@modelcontextprotocol/sdk": "1.26.0",
     "axios": "^1.13.5",
     "form-data": "^4.0.4"
   },
